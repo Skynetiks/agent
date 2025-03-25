@@ -16,12 +16,17 @@ const getGoogleSearchResults = async (query: string, page: number): Promise<{ li
         const $ = cheerio.load(html);
         const results: { link: string; snippet: string }[] = [];
 
-        $("div.tF2Cxc").each((_, element) => {
-            const rawLink = $(element).find("a").attr("href");
-            const snippet = $(element).find(".VwiC3b").text().trim(); // Extract snippet text
-
-            if (rawLink) {
-                results.push({ link: decodeURIComponent(rawLink), snippet });
+        $("h3").each((_, el) => {
+            const titleElement = $(el);
+            const secondDiv = titleElement.closest('div').parent().parent().parent().parent().next();
+    
+            const linkElement = titleElement?.parent("a"); // Find the nearest anchor tag
+    
+            if (linkElement?.attr("href")) {
+                results.push({
+                    link: decodeURIComponent(linkElement.attr("href")!.replace("/url?q=", "").split("&")[0]), // Extract clean URL
+                    snippet: secondDiv?.text().trim() || "",
+                });
             }
         });
 
