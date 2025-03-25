@@ -1,0 +1,17 @@
+{
+  "extends": "@tsconfig/node20/tsconfig.json", // Use the Node.js 20 preset
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "dist",
+    "declaration": true,
+    "sourceMap": true,
+    "incremental": true,
+    "esModuleInterop": true,
+    "moduleResolution": "Bundler",
+    "module": "Preserve",
+    "resolveJsonModule": true,
+    "skipLibCheck": true
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules", "dist"]
+}
