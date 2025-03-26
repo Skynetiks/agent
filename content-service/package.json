@@ -1,5 +1,5 @@
 {
-  "name": "agent",
+  "name": "content-service",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -7,15 +7,10 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": "",
+  "author": "Diwanshu",
   "license": "ISC",
-  "packageManager": "pnpm@10.6.1",
   "devDependencies": {
-    "@types/node": "^22.13.13"
-  },
-  "dependencies": {
-    "cheerio": "^1.0.0",
-    "dotenv": "^16.4.7",
-    "zod": "^3.24.2"
+    "@tsconfig/node20": "^20.1.5",
+    "typescript": "^5.8.2"
   }
 }
