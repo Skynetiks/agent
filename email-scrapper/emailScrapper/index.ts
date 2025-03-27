@@ -2,10 +2,13 @@ import * as cheerio from "cheerio";
 import { ScrapeWebPage } from "./scrapper";
 
 const GOOGLE_SEARCH_URL = "https://www.google.com/search?q=";
-const MAX_PAGES = 1; // Number of pages to scrape
+const MAX_PAGES = 100; // Maximum number of pages to scrape
 
 // Function to fetch Google Search Results
-const getGoogleSearchResults = async (query: string, page: number): Promise<{ link: string; snippet: string }[]> => {
+const getGoogleSearchResults = async (query: string, page: number): Promise<{ 
+    results: { link: string; snippet: string }[],
+    hasNextPage: boolean 
+}> => {
     const start = page * 10; // Google paginates by increments of 10
     const searchUrl = `${GOOGLE_SEARCH_URL}${encodeURIComponent(query)}&start=${start}`;
 
@@ -15,6 +18,9 @@ const getGoogleSearchResults = async (query: string, page: number): Promise<{ li
 
         const $ = cheerio.load(html);
         const results: { link: string; snippet: string }[] = [];
+
+        // Check for next page link
+        const hasNextPage = $('a#pnnext').length > 0;
 
         $("h3").each((_, el) => {
             const titleElement = $(el);
@@ -30,22 +36,24 @@ const getGoogleSearchResults = async (query: string, page: number): Promise<{ li
             }
         });
 
-        return results;
+        return { results, hasNextPage };
     } catch (error) {
         console.error("❌ Error fetching Google search results:", error);
-        return [];
+        return { results: [], hasNextPage: false };
     }
 };
 
 // Function to scrape emails directly from Google search results
 const scrapeGoogleEmails = async (query: string) => {
     let emailResults: { email: string; source: string }[] = [];
+    let currentPage = 30;
+    let hasNextPage = true;
 
-    for (let page = 0; page < MAX_PAGES; page++) {
-        console.log(`🔍 Scraping Google page ${page + 1}...`);
+    while (hasNextPage && currentPage < MAX_PAGES) {
+        console.log(`🔍 Scraping Google page ${currentPage + 1}...`);
         
         // Fetch search results
-        const searchResults = await getGoogleSearchResults(query, page);
+        const { results: searchResults, hasNextPage: nextPageExists } = await getGoogleSearchResults(query, currentPage);
 
         for (const { link, snippet } of searchResults) {
             // Regex to find emails in the snippet
@@ -56,6 +64,10 @@ const scrapeGoogleEmails = async (query: string) => {
                 emailResults.push({ email, source: link });
             });
         }
+
+        // Update pagination variables
+        hasNextPage = nextPageExists;
+        currentPage++;
     }
 
     console.log("📩 Extracted Emails with Sources:", emailResults);
@@ -64,3 +76,5 @@ const scrapeGoogleEmails = async (query: string) => {
 
 // Run the scraper
 scrapeGoogleEmails('real estate site:linkedin.com/in "@gmail.com"');
+
+export { scrapeGoogleEmails, getGoogleSearchResults };
