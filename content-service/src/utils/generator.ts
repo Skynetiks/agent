@@ -1,8 +1,8 @@
+import { ai } from "../ai";
 import {
   getEmailContentPrompt,
   getEmailSubjectPrompt,
 } from "../prompts/email-content";
-import ai from "./ai";
 import { env } from "./env";
 
 export const generateMailContent = async () => {
@@ -142,7 +142,22 @@ How do you measure the success of your digital marketing campaigns?
     },
   });
 
-  const completion = await ai.chat.completions.create({
+  //   const completion = await ai.chat.completions.create({
+  //     messages: [
+  //       {
+  //         role: "system",
+  //         content:
+  //           "You are an expert email marketing assistant specializing in crafting personalized, conversion-focused email templates.",
+  //       },
+  //       {
+  //         role: "user",
+  //         content: emailContentPrompt,
+  //       },
+  //     ],
+  //     model: env.AI_MODEL,
+  //   });
+
+  const completion = await ai.chat({
     messages: [
       {
         role: "system",
@@ -154,30 +169,14 @@ How do you measure the success of your digital marketing campaigns?
         content: emailContentPrompt,
       },
     ],
-    model: env.DEEPSEEK_MODEL,
+    temperature: 0.5,
   });
 
   const subjectPrompt = getEmailSubjectPrompt({
     subjectTone: "CURIOSITY_DRIVEN",
-    body: completion.choices[0].message.content || "",
+    body: completion || "",
     objective: "Increase sales and revenue for our skyfunnel",
   });
 
-  const subjectCompletion = ai.chat.completions.create({
-    messages: [
-      {
-        role: "system",
-        content:
-          "You are an expert email marketing assistant specializing in crafting personalized, conversion-focused email templates.",
-      },
-      {
-        role: "user",
-        content: subjectPrompt,
-      },
-    ],
-    model: env.DEEPSEEK_MODEL,
-  });
-
-  console.log((await subjectCompletion).choices[0].message.content);
-  console.log(completion.choices[0].message.content);
+  console.log(completion);
 };
