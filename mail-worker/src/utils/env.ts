@@ -4,19 +4,30 @@ import { z } from "zod";
 dotenv.config();
 
 // Define schema using Zod
-const envSchema = z.object({
-  NODE_ENV: z.enum(["development", "production", "test"]),
-  DATABASE_URL: z.string().url(),
+export const envSchema = z.object({
+  NODE_ENV: z
+    .enum(["development", "production", "test"])
+    .describe("On which environment the app is running"),
+  DATABASE_URL: z.string().url().min(1).describe("A Postgres database URL"),
   DEBUG: z
     .string()
     .default("false")
-    .transform((val) => val === "true"),
-  ENCRYPTION_SECRET: z.string(),
-  SES_CONFIG_SET: z.string().optional(),
+    .transform((val) => val === "true")
+    .describe(
+      "Must be true to enable debug mode. in debug mode, the app will log more information"
+    ),
+  ENCRYPTION_SECRET: z
+    .string()
+    .min(1)
+    .describe("Same encryption secret used in the server"),
+  SES_CONFIG_SET: z.string().optional().describe("Configuration Set for ses."),
   SKIP_MAIL_SEND: z
     .string()
     .default("false")
-    .transform((val) => val === "true"),
+    .transform((val) => val === "true")
+    .describe(
+      "If true, app will not send emails. it is used for testing and development. true | false. default: false"
+    ),
 });
 
 // Parse and validate environment variables
