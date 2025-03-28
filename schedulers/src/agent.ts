@@ -1,18 +1,18 @@
 import cron from "node-cron";
 import { SQSService } from "./utils/sqs";
-import { AgentData, SQSRegion } from "./types";
+import { SQSAgentData, SQSRegion } from "./types";
 import { env } from "./utils/env";
 import { Logger } from "./utils/logger";
 import { decreaseLastKeywordIndex, getActiveAgents } from "./queries/agent";
 
 // Initialize SQS service
-const leadGeneratorQueue = new SQSService<AgentData>({
+const leadGeneratorQueue = new SQSService<SQSAgentData>({
   region: env.SQS_REGION,
   queueUrl: env.LEAD_GENERATOR_QUEUE_URL,
 });
 
 async function pushAgentsToQueue() {
-  let agents: AgentData[] | undefined;
+  let agents: SQSAgentData[] | undefined;
   try {
     Logger.info(`⏱️ Fetching active agents`);
 
@@ -44,27 +44,27 @@ async function pushAgentsToQueue() {
 
 pushAgentsToQueue();
 
-function startScheduler() {
-  cron.schedule(env.AGENT_SCHEDULER_CRON, async () => {
-    Logger.info("Running SQS Scheduler...");
-    await pushAgentsToQueue();
-  });
+// function startScheduler() {
+//   cron.schedule(env.AGENT_SCHEDULER_CRON, async () => {
+//     Logger.info("Running SQS Scheduler...");
+//     await pushAgentsToQueue();
+//   });
 
-  Logger.info(
-    `Scheduler started: Running according to the ${env.AGENT_SCHEDULER_CRON} cron expression`
-  );
-}
+//   Logger.info(
+//     `Scheduler started: Running according to the ${env.AGENT_SCHEDULER_CRON} cron expression`
+//   );
+// }
 
-Logger.info(`Starting the App in ${env.NODE_ENV} mode...`);
-Logger.debug(`Debug mode is on`);
-startScheduler();
+// Logger.info(`Starting the App in ${env.NODE_ENV} mode...`);
+// Logger.debug(`Debug mode is on`);
+// startScheduler();
 
-process.on("SIGINT", async () => {
-  Logger.info("🛑 Shutting down scheduler...");
-  process.exit(0);
-});
+// process.on("SIGINT", async () => {
+//   Logger.info("🛑 Shutting down scheduler...");
+//   process.exit(0);
+// });
 
-process.on("SIGTERM", async () => {
-  Logger.info("🛑 Shutting down scheduler...");
-  process.exit(0);
-});
+// process.on("SIGTERM", async () => {
+//   Logger.info("🛑 Shutting down scheduler...");
+//   process.exit(0);
+// });

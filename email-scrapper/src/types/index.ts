@@ -50,22 +50,23 @@ export enum SQSRegion {
 //   updatedAt: Date;
 // };
 
-// In case you change agent type here also change it in other services as well
 export type SQSAgentData = {
-  id: string;
+  keyword: string;
+  email: string;
   name: string;
-  description: string;
-  keyword: string | null;
-  activeTill: string;
-  timezone: string;
-  sendLimitDay: number;
-  objective: string;
-  valueProposition: string;
+  description?: string;
+  activeTill: Date;
+  startTime?: string;
+  activeDays?: string[];
+  endTime?: string;
+  timezone?: string;
+  sendLimitDay?: number;
+  objective?: string;
+  valueProposition?: string;
   personalizationLevel: string;
   length: string;
-  strategy: string;
+  strategy?: string;
   tone: string;
-  createdAt: string;
-  updatedAt: string;
-  lastKeywordIndex: number;
+  createdAt: Date;
+  updatedAt: Date;
 };

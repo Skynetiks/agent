@@ -1,5 +1,5 @@
 import dotenv from "dotenv";
-import { env } from "./utils/env";
+import { env } from "./env";
 dotenv.config();
 
 export const ScrapeWebPage = async (
