@@ -1,0 +1,77 @@
+{
+  "@context": "http://schema.org",
+  "@graph": [
+    {
+      "@type": "WebPage",
+      "reviewedBy": { "@type": "Person", "name": "Diwanshu ." },
+      "url": "https://in.linkedin.com/in/diwanshu-340716211"
+    },
+    {
+      "@context": "http://schema.org",
+      "@type": "Person",
+      "address": {
+        "@type": "PostalAddress",
+        "addressCountry": "IN",
+        "addressLocality": "Ambala, Haryana, India"
+      },
+      "alumniOf": [
+        {
+          "@type": "Organization",
+          "name": "The Tann Mann Gaadi ",
+          "url": "https://in.linkedin.com/company/the-tann-mann-gaadi",
+          "member": {
+            "@type": "OrganizationRole",
+            "startDate": "2023-04",
+            "endDate": "2023-08"
+          }
+        },
+        {
+          "@type": "EducationalOrganization",
+          "name": "Panjab University,Chandigarh",
+          "url": "https://in.linkedin.com/school/panjab-university-chandigarh/",
+          "member": {
+            "@type": "OrganizationRole",
+            "startDate": "2022-05",
+            "endDate": "2025-06"
+          }
+        }
+      ],
+      "awards": [],
+      "disambiguatingDescription": "",
+      "image": {
+        "@type": "ImageObject",
+        "contentUrl": "https://media.licdn.com/dms/image/v2/D4D03AQFrZ-UZ0yU2Uw/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1685704146220?e=2147483647&v=beta&t=-oUq11oC6ml1IonvwE2YBy27AzQbTPKN9stzAMtA9fM"
+      },
+      "jobTitle": ["Full Stack Developer"],
+      "knowsLanguage": [
+        { "@type": "Language", "name": "English" },
+        { "@type": "Language", "name": "Hindi" },
+        { "@type": "Language", "name": "Punjabi" }
+      ],
+      "memberOf": [],
+      "name": "Diwanshu .",
+      "sameAs": "https://in.linkedin.com/in/diwanshu-340716211",
+      "url": "https://in.linkedin.com/in/diwanshu-340716211",
+      "worksFor": [
+        {
+          "@type": "Organization",
+          "name": "SkyFunnel.ai",
+          "url": "https://in.linkedin.com/company/skyfunnel-ai",
+          "location": "Noida, Uttar Pradesh, India",
+          "member": {
+            "@type": "OrganizationRole",
+            "description": "• Led the development of key features such as Mailbox, Google Calendar sync, \u003Cbr\u003EGmail integration, SMTP Integration and a lead finder using Google Maps, \u003Cbr\u003Eresulting in a 20% boost in user engagement. \u003Cbr\u003E• Developed an end-to-end service for sending and managing email queues, \u003Cbr\u003Eimplementing robust queue management and ensuring reliable delivery, \u003Cbr\u003Eimproving system efficiency and user communication. \u003Cbr\u003E• Utilized Node.js, Next.js, BullMQ, and Cron Jobs for backend development, \u003Cbr\u003Ewhile working with PostgreSQL and Prisma for database management. Integrated \u003Cbr\u003Ethird-party APIs like Google Calendar and Google Maps, developed marketing \u003Cbr\u003Eautomation features (drip campaigns, lead finder), and Hands-on experience \u003Cbr\u003Ewith cloud technologies.",
+            "startDate": "2024-12"
+          }
+        }
+      ],
+      "interactionStatistic": {
+        "@type": "InteractionCounter",
+        "interactionType": "https://schema.org/FollowAction",
+        "name": "Follows",
+        "userInteractionCount": 1623
+      },
+      "description": "I have experience creating web application solutions as a Mern Stack Developer. I am quite knowledgeable about the entire Web development life cycle and am passionate about coming up with original solutions. \u003Cbr\u003E\u003Cbr\u003EI've developed, tested, and deployed web apps with success because to my solid technical background and ability to work well in teams. I am well-versed in a number of frameworks, including  Node.js, and React, Next.js and I have worked with languages including JavaScript, HTML, CSS. In addition, I have expertise integrating APIs and web services as well as developing and building databases in MongoDB. I have strong communication and problem-solving skills, and I feel at ease working in an Agile atmosphere."
+    }
+  ]
+}
