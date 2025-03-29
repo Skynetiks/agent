@@ -3,11 +3,10 @@ import {
   ReceiveMessageCommand,
   DeleteMessageCommand,
   Message,
-  SendMessageCommand,
   SendMessageCommandInput,
+  SendMessageCommand,
 } from "@aws-sdk/client-sqs";
 import { env } from "./env";
-import pLimit from "p-limit";
 import { Logger } from "./logger";
 
 /**
@@ -23,7 +22,7 @@ export class NonRetriableError extends Error {
 }
 
 type Options = {
-  concurrencyLimit?: number;
+  //   concurrencyLimit?: number;
   pollingInterval?: number;
 };
 
@@ -32,12 +31,12 @@ export class SQSConsumer<T> {
   private queueUrl: string;
   private pollingInterval: number;
   private processCallback: (message: Message, body: T) => Promise<void>;
-  private concurrencyLimit: number;
+  //   private concurrencyLimit: number;
 
   constructor(
     queueUrl: string,
     processCallback: (message: Message, body: T) => Promise<void>,
-    { concurrencyLimit = 10, pollingInterval = 5000 }: Options = {}
+    { pollingInterval = 5000 }: Options = {}
   ) {
     this.sqsClient = new SQSClient({
       region: env.SQS_REGION,
@@ -49,7 +48,7 @@ export class SQSConsumer<T> {
     this.queueUrl = queueUrl;
     this.pollingInterval = pollingInterval;
     this.processCallback = processCallback;
-    this.concurrencyLimit = concurrencyLimit;
+    // this.concurrencyLimit = concurrencyLimit;
   }
 
   private async pollMessages() {
@@ -62,27 +61,19 @@ export class SQSConsumer<T> {
           VisibilityTimeout: 30,
         });
 
-        console.log("Polling for messages...");
+        Logger.info("Polling for messages...");
         const response = await this.sqsClient.send(command);
         if (response.Messages?.length === 0) {
           console.log("No messages found. Waiting for next poll...");
         }
 
         if (response.Messages) {
-          const limit = pLimit(this.concurrencyLimit);
-
-          const tasks = response.Messages.map((message) =>
-            limit(() =>
-              this.processMessage(message).catch((err) => {
-                console.error(`Error receiving messages:`, err);
-              })
-            )
-          );
-
-          await Promise.all(tasks);
+          for (const message of response.Messages) {
+            await this.processMessage(message);
+          }
         }
       } catch (error) {
-        console.error("Error receiving messages:", error);
+        Logger.error(`Error receiving messages: ${error}`);
       }
 
       await new Promise((resolve) => setTimeout(resolve, this.pollingInterval));
@@ -103,11 +94,11 @@ export class SQSConsumer<T> {
       const messageId = message.MessageId!;
       const retryCount = message.Attributes?.ApproximateReceiveCount || "0";
       if (await this.isDuplicateMessage(messageId, retryCount)) {
-        console.log(`Skipping duplicate message: ${message.MessageId}`);
+        Logger.info(`Skipping duplicate message: ${message.MessageId}`);
         return;
       }
 
-      console.log(
+      Logger.info(
         `Processing Message ${message.MessageId} for retry count ${retryCount}`
       );
 
@@ -122,16 +113,15 @@ export class SQSConsumer<T> {
       console.log(`Message processed successfully: ${message.MessageId}`);
     } catch (error) {
       if (error instanceof NonRetriableError) {
-        console.error(
+        Logger.error(
           `Non-retriable error processing message: ${message.MessageId}`,
           error
         );
         // Delete the message even if processing failed, since we don't want to retry it.
         await this.deleteMessage(message.ReceiptHandle!);
       } else {
-        console.error(
-          `Retriable error processing message: ${message.MessageId}`,
-          error
+        Logger.error(
+          `Retriable error processing message: ${message.MessageId} Error: ${error}`
         );
       }
     }
@@ -145,16 +135,16 @@ export class SQSConsumer<T> {
           ReceiptHandle: receiptHandle,
         })
       );
-      console.log(
+      Logger.info(
         `Message deleted successfully: ${receiptHandle.substring(0, 15)}...`
       );
     } catch (error) {
-      console.error("Error deleting message:", error);
+      Logger.info(`Error deleting message: ${error}`);
     }
   }
 
   public start() {
-    console.log("Starting SQS consumer...");
+    Logger.info("Starting SQS consumer...");
     this.pollMessages();
   }
 }
@@ -198,7 +188,6 @@ export class SQSPublisher<T> {
   }
 
   async sendBatchMessages(messages: T[], batchSize = 10): Promise<void> {
-    Logger.info(`Sending ${messages.length} messages to next queue`);
     const batches: T[][] = [];
     for (let i = 0; i < messages.length; i += batchSize) {
       const batch = messages.slice(i, i + batchSize);

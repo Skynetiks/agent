@@ -4,8 +4,8 @@ import {
   SendMessageCommandInput,
 } from "@aws-sdk/client-sqs";
 import { SQSRegion } from "../types";
-import { Logger } from "./logger";
 import { env } from "./env";
+import { Logger } from "./logger";
 
 interface SQSConfig {
   region: SQSRegion;

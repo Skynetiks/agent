@@ -7,11 +7,14 @@ import {
   JSONLdPerson,
 } from "../types/jsonld";
 import { FetchResult } from "../types/scrapper";
+import { Logger } from "../utils/logger";
 
 // ============================ Linkedin For Person ===============================================
 export const scrapeLinkedInPerson = async (url: string) => {
   const html = await ScrapeWebPage(url);
   if (!html) return;
+
+  Logger.debug("Scraping Linkedin Person");
 
   const $ = cheerio.load(html);
   const jsonDataText = $('script[type="application/ld+json"]').html();
@@ -23,12 +26,17 @@ export const scrapeLinkedInPerson = async (url: string) => {
       ?.find((item) => item["@type"] === "Person")
       ?.worksFor?.find((org) => org["@type"] === "Organization")?.url ?? null;
 
-  if (!companyLinkedin) return;
+  Logger.debug("Linkedin Person Scraped");
+  if (!companyLinkedin) {
+    Logger.info(`Person ${url} works for no organization early returning....`);
+    return;
+  }
   return scrapeLinkedInCompany(companyLinkedin);
 };
 
 // ================================== Linkedin Company =============================================
 export const scrapeLinkedInCompany = async (url: string) => {
+  Logger.debug("Scraping Linkedin Company");
   const html = await ScrapeWebPage(url);
   if (!html) return;
   // Assuming you have the HTML content in a variable called `html`
@@ -61,6 +69,7 @@ export const scrapeLinkedInCompany = async (url: string) => {
 
     result.otherContext = BuildPostData(posts);
 
+    Logger.info(`Linkedin Company Scraped, ${url} `);
     return result;
   }
   return undefined;

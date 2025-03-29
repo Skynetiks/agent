@@ -1,9 +1,14 @@
 import { Message } from "@aws-sdk/client-sqs";
 import { env } from "./utils/env";
 import { scrapeGoogleEmails } from "./utils/extractor";
-import { SQSConsumer } from "./utils/sqs";
-import { SQSAgentData } from "./types";
+import { SQSConsumer, SQSPublisher } from "./utils/sqs";
+import { Lead, SQSAgentData } from "./types";
 import { Email } from "./types/emails";
+
+const verificationPublisher = new SQSPublisher<Lead>({
+  queueUrl: env.LEAD_VERIFICATION_QUEUE_URL,
+  region: env.SQS_REGION,
+});
 
 const handleMessage = async (message: Message, body: SQSAgentData) => {
   const { keywordName, keywordSite } = extractKeywordAndSite(
@@ -20,8 +25,9 @@ const handleMessage = async (message: Message, body: SQSAgentData) => {
   );
 
   const validEmails = validateEmails(emails);
-  console.log({ validate: validEmails.length });
-  console.log({ orignal: emails.length });
+  await verificationPublisher.sendBatchMessages(
+    validEmails.map((email) => ({ email: email.email, url: email.source }))
+  );
 };
 
 const extractKeywordAndSite = (keyword: string, separator: string) => {

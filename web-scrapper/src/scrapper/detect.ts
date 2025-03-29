@@ -1,3 +1,5 @@
+import { Logger } from "../utils/logger";
+
 const restrictedDomains = new Set([
   "linkedin.com",
   "twitter.com",
@@ -37,6 +39,7 @@ const getWebPageType = (
   hostname: string,
   pathname: string
 ): WebPageType | null => {
+  Logger.debug(`Getting web page type for ${hostname} and ${pathname}`);
   switch (true) {
     case hostname.includes("linkedin.com") && pathname.startsWith("/in/"):
       return WebPageType.LINKEDIN;
@@ -62,10 +65,11 @@ export const detectWebPageType = async (
   url: string
 ): Promise<WebPageType | null> => {
   try {
+    Logger.debug(`Detecting web page type for ${url}`);
     const { hostname, pathname } = new URL(url);
     return getWebPageType(hostname, pathname);
   } catch (error) {
-    console.error("Invalid URL:", error);
+    Logger.error(`Failed to detect web page type for ${url}`);
     return null;
   }
 };

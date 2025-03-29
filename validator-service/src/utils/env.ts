@@ -1,6 +1,5 @@
 import dotenv from "dotenv";
 import { z } from "zod";
-import { SQSRegion } from "../types";
 
 dotenv.config();
 
@@ -9,20 +8,21 @@ export const envSchema = z.object({
   NODE_ENV: z
     .enum(["development", "production", "test"])
     .describe("On which environment the app is running"),
-  BRIGHTDATA_API_KEY: z.string().min(1).describe("A Brightdata API key"),
-  MAX_PAGES_TO_SCRAPE: z.coerce
-    .number()
-    .min(1)
-    .describe("Maximum number of pages to scrape from google"),
   DEBUG: z.coerce.boolean().default(false).describe("Enable debug mode"),
-
-  SQS_REGION: z.nativeEnum(SQSRegion).describe("SQS Region"),
-  LEAD_GENERATOR_QUEUE_URL: z.string().url().min(1).describe("SQS Queue URL"),
+  VALIDATOR_API_ENDPOINT: z
+    .string()
+    .url()
+    .describe(
+      "URL of the validator API endpoint without trailing slash exp: https://api.validator.com/v1"
+    ),
+  AUTH_TOKEN: z.string().describe("Auth token for the validator API"),
   LEAD_VERIFICATION_QUEUE_URL: z
     .string()
     .url()
     .min(1)
-    .describe("SQS Verification Queue URL"),
+    .describe("SQS Queue URL"),
+  WEB_SCRAPPER_QUEUE_URL: z.string().url().min(1).describe("SQS Queue URL"),
+  SQS_REGION: z.string().min(1).describe("SQS Region"),
   AWS_KEY: z.string().min(1).describe("AWS Key"),
   AWS_SECRET: z.string().min(1).describe("AWS Secret"),
   CONCURRENCY_LIMIT: z.coerce

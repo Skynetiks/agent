@@ -1,4 +1,5 @@
 import { env } from "./env";
+import { Logger } from "./logger";
 
 export const ScrapeWebPage = async (
   searchUrl: string
@@ -27,9 +28,10 @@ export const ScrapeWebPage = async (
     }
 
     const text = await response.text();
+    Logger.debug(`Success in bright data api request`);
     return text;
   } catch (error) {
-    console.error("Error in bright data api request", error);
+    Logger.error(`Error in bright data api request ${error}`);
     return undefined;
   }
 };

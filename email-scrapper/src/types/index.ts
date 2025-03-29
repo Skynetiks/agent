@@ -70,3 +70,8 @@ export type SQSAgentData = {
   createdAt: Date;
   updatedAt: Date;
 };
+
+export type Lead = {
+  email: string;
+  url: string;
+};
