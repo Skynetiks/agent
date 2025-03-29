@@ -13,3 +13,7 @@ export type FetchResult = {
   linkedinUrl: string;
   otherContext: string;
 };
+
+export type SQSOutputType = FetchResult & {
+  email: string;
+};

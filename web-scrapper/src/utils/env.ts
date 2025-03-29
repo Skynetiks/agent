@@ -13,6 +13,11 @@ export const envSchema = z.object({
 
   SQS_REGION: z.string().min(1).describe("SQS Region"),
   WEB_SCRAPPER_QUEUE_URL: z.string().url().min(1).describe("SQS Queue URL"),
+  CONTENT_GENERATOR_QUEUE_URL: z
+    .string()
+    .url()
+    .min(1)
+    .describe("SQS ai content/email generator Queue URL"),
   AWS_KEY: z.string().min(1).describe("AWS Key"),
   AWS_SECRET: z.string().min(1).describe("AWS Secret"),
 });
