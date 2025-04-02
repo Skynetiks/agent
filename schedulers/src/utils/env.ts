@@ -26,6 +26,10 @@ export const envSchema = z.object({
     .default("*/5 * * * *")
     .describe("Cron expression for agent scheduler"),
 
+  MAIL_SENDER_CRON: z
+    .string()
+    .default("*/5 * * * *")
+    .describe("Cron expression for mail sender"),
   PG_HOST: z.string().default("localhost").describe("Postgres Host"),
   PG_PORT: z.coerce.number().default(5432).describe("Postgres Port"),
   PG_USER: z.string().default("postgres").describe("Postgres User"),

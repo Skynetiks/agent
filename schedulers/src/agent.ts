@@ -44,6 +44,7 @@ async function pushAgentsToQueue() {
 
 pushAgentsToQueue();
 
+// TODO: Uncomment this
 // function startScheduler() {
 //   cron.schedule(env.AGENT_SCHEDULER_CRON, async () => {
 //     Logger.info("Running SQS Scheduler...");

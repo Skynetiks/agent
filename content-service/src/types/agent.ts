@@ -86,6 +86,7 @@ export interface AgentWithSenderIdentityDto {
   lastKeywordIndex: number;
   createdAt: Date;
   updatedAt: Date;
+  senderName: string;
 
   // SenderIdentity fields
   senderIdentityId: string;
@@ -94,4 +95,6 @@ export interface AgentWithSenderIdentityDto {
   senderIsActive: boolean;
   senderCreatedAt: Date;
   organizationId: string;
+  organizationName: string;
+  organizationIndustry: string;
 }

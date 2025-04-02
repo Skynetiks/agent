@@ -16,6 +16,7 @@ SELECT
       a."startTime",
       a."activeDays",
       a."endTime",
+      a."senderName",
       a.timezone,
       a."sendLimitDay",
       a.objective,
@@ -31,14 +32,18 @@ SELECT
       si.email AS "senderEmail",
       si.type AS "senderType",
       si."isActive" AS "senderIsActive",
-     	si."createdAt" AS "senderCreatedAt",
-      si."organizationId" AS "organizationId"
+      si."createdAt" AS "senderCreatedAt",
+      si."organizationId" AS "organizationId",
+      o.name AS "organizationName",
+      o.industry AS "organizationIndustry"
     FROM
       "Agent" a
     JOIN
       "_AgentToSenderIdentities" aj ON a.id = aj."A"
     JOIN
       "SenderIdentities" si ON si.id = aj."B"
+    JOIN
+      "Organization" o ON a."organizationId" = o.id
     WHERE
       a.id = $1
 `;

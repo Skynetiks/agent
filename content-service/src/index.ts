@@ -1,7 +1,7 @@
 import { Message } from "@aws-sdk/client-sqs";
 import { generateMailContent } from "./utils/generator";
 import { CompanyInfo, SQSInputType } from "./types";
-import { SQSConsumer } from "./utils/sqs";
+import { NonRetriableError, SQSConsumer } from "./utils/sqs";
 import { env } from "./utils/env";
 import { cache__getAgentDetails } from "./utils/agent";
 import { StrategyOption } from "./prompts/options/statergy";
@@ -27,13 +27,16 @@ const processMessage = async (message: Message, body: SQSInputType) => {
 
   const [agent] = await cache__getAgentDetails(body.agentId);
 
-  // TODO: Add all details
+  if (!agent) {
+    throw new NonRetriableError("Agent not found");
+  }
+
   const senderCompanyInfo = {
-    companyName: "",
-    industry: "",
+    companyName: agent.organizationName,
+    industry: agent.organizationIndustry,
     contact: {
       email: agent.senderEmail,
-      name: "",
+      name: agent.senderName,
     },
     websiteData: undefined,
     valueProposition: agent.valueProposition || "",
@@ -64,6 +67,7 @@ const processMessage = async (message: Message, body: SQSInputType) => {
     timezone: agent.timezone,
     to: body.email,
     replyTo: agent.senderEmail,
+    senderName: agent.senderName,
   });
 };
 
