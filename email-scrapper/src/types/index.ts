@@ -51,6 +51,7 @@ export enum SQSRegion {
 // };
 
 export type SQSAgentData = {
+  id: string;
   keyword: string;
   email: string;
   name: string;

@@ -28,6 +28,16 @@ export const envSchema = z.object({
     .describe(
       "If true, app will not send emails. it is used for testing and development. true | false. default: false"
     ),
+
+  SQS_REGION: z.string().describe("SQS Region"),
+  MAIL_SENDER_QUEUE_URL: z
+    .string()
+    .url()
+    .min(1)
+    .describe("SQS Mail sender Queue URL"),
+  AWS_KEY: z.string().min(1).describe("AWS Key"),
+  AWS_SECRET: z.string().min(1).describe("AWS Secret"),
+  CONCURRENCY: z.coerce.number().default(1).describe("Concurrency"),
 });
 
 // Parse and validate environment variables

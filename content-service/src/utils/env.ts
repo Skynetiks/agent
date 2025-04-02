@@ -28,6 +28,13 @@ export const envSchema = z.object({
     .describe("SQS ai content/email generator Queue URL"),
   AWS_KEY: z.string().min(1).describe("AWS Key"),
   AWS_SECRET: z.string().min(1).describe("AWS Secret"),
+
+  PG_HOST: z.string().default("localhost").describe("Postgres Host"),
+  PG_PORT: z.coerce.number().default(5432).describe("Postgres Port"),
+  PG_USER: z.string().default("postgres").describe("Postgres User"),
+  PG_PASSWORD: z.string().default("password").describe("Postgres Password"),
+  PG_DATABASE: z.string().optional().describe("Postgres Database"),
+  PG_SSL: z.string().default("false").describe("Postgres SSL"),
 });
 
 // Parse and validate environment variables

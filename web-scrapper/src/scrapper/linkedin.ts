@@ -68,6 +68,7 @@ export const scrapeLinkedInCompany = async (url: string) => {
     });
 
     result.otherContext = BuildPostData(posts);
+    console.log(result);
 
     Logger.info(`Linkedin Company Scraped, ${url} `);
     return result;

@@ -1,4 +1,4 @@
-import { AgentData } from "../types";
+import { SQSAgentData } from "../types";
 import { query } from "../utils/db";
 import { Logger } from "../utils/logger";
 
@@ -57,7 +57,7 @@ RETURNING nk.*, a."lastKeywordIndex";
 
 export const getActiveAgents = async () => {
   try {
-    return await query<AgentData>(ActiveAgentsQuery);
+    return await query<SQSAgentData>(ActiveAgentsQuery);
   } catch {
     return [];
   }

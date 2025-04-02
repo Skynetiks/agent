@@ -16,4 +16,5 @@ export type FetchResult = {
 
 export type SQSOutputType = FetchResult & {
   email: string;
+  agentId: string;
 };

@@ -26,7 +26,11 @@ const handleMessage = async (message: Message, body: SQSAgentData) => {
 
   const validEmails = validateEmails(emails);
   await verificationPublisher.sendBatchMessages(
-    validEmails.map((email) => ({ email: email.email, url: email.source }))
+    validEmails.map((email) => ({
+      email: email.email,
+      url: email.source,
+      agentId: body.id,
+    }))
   );
 };
 

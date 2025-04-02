@@ -1,42 +1,13 @@
-import { CtaOption, getCtaPrompt, GetRequirement } from "./options/cta";
-import { getLengthPrompt, LengthOption } from "./options/length";
-import {
-  getPersonalizationLevelPrompt,
-  PersonalizationLevelOption,
-} from "./options/personalizedLevel";
-import { getStrategyPrompt, StrategyOption } from "./options/statergy";
+import { GetEmailContentPromptProps } from "../types";
+import { getCtaPrompt } from "./options/cta";
+import { getLengthPrompt } from "./options/length";
+import { getPersonalizationLevelPrompt } from "./options/personalizedLevel";
+import { getStrategyPrompt } from "./options/statergy";
 import {
   getSubjectLineStylePrompt,
   SubjectLineStyle,
 } from "./options/subjectTone";
-import { getTonePrompt, ToneOption } from "./options/tone";
-
-type GetEmailContentPromptProps = {
-  senderCompanyInfo: CompanyInfo<"sender">;
-  objective: string;
-  receiverCompanyInfo: CompanyInfo<"receiver">;
-  personalizationLevel: PersonalizationLevelOption;
-  length: LengthOption;
-  strategy: StrategyOption;
-  cta?: CTAType;
-  tone: ToneOption;
-};
-
-type CTAType = {
-  label: CtaOption;
-  requirements: Record<string, string>;
-};
-
-type CompanyInfo<T extends "sender" | "receiver"> = {
-  companyName: string;
-  industry: string;
-  websiteData: T extends "receiver" ? string : undefined;
-  contact: {
-    email: string;
-    name: string;
-  };
-  valueProposition: T extends "sender" ? string : undefined;
-};
+import { getTonePrompt } from "./options/tone";
 
 export const getEmailContentPrompt = ({
   objective,

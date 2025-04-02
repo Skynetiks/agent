@@ -3,7 +3,7 @@ import { env } from "./utils/env";
 import { SQSConsumer, SQSPublisher } from "./utils/sqs";
 import { ScrapeCompanyDetails } from "./scrapper";
 import { Lead } from "./types/sqs";
-import { FetchResult, SQSOutputType } from "./types/scrapper";
+import { SQSOutputType } from "./types/scrapper";
 
 const contentServicePublisher = new SQSPublisher<SQSOutputType>({
   queueUrl: env.CONTENT_GENERATOR_QUEUE_URL,
@@ -17,8 +17,8 @@ const processMessage = async (message: Message, body: Lead) => {
   contentServicePublisher.sendMessage({
     ...companyDetails,
     email: body.email,
+    agentId: body.agentId,
   });
-  console.log(companyDetails);
 };
 
 async function main() {

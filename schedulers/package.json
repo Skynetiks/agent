@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "agent": "tsx watch src/agent.ts"
+    "agent": "tsx watch src/agent.ts",
+    "task": "tsx watch src/task.ts"
   },
   "keywords": [],
   "author": "Diwanshu",

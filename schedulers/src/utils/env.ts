@@ -18,6 +18,7 @@ export const envSchema = z.object({
     ),
   SQS_REGION: z.nativeEnum(SQSRegion).describe("SQS Region"),
   LEAD_GENERATOR_QUEUE_URL: z.string().url().min(1).describe("SQS Queue URL"),
+  MAIL_SENDER_QUEUE_URL: z.string().url().min(1).describe("SQS Queue URL"),
   AWS_KEY: z.string().min(1).describe("AWS Key"),
   AWS_SECRET: z.string().min(1).describe("AWS Secret"),
   AGENT_SCHEDULER_CRON: z
