@@ -1,0 +1,52 @@
+module.exports = {
+  apps: [
+    {
+      name: "Content Generator",
+      cwd: "./content-service",
+      script: "pnpm",
+      args: "dev",
+      exec_mode: "fork",
+      autorestart: true,
+    },
+    {
+      name: "Lead Scrapper",
+      cwd: "./email-scrapper",
+      script: "pnpm",
+      args: "dev",
+      exec_mode: "fork",
+      autorestart: true,
+    },
+    {
+      name: "Mail Worker",
+      cwd: "./mail-worker",
+      script: "pnpm",
+      args: "dev",
+      exec_mode: "fork",
+      autorestart: true,
+    },
+    {
+      name: "Validator Service",
+      cwd: "./validator-service",
+      script: "pnpm",
+      args: "dev",
+      exec_mode: "fork",
+      autorestart: true,
+    },
+    {
+      name: "Agent Scheduler",
+      cwd: "./schedulers",
+      script: "pnpm",
+      args: "run agent",
+      exec_mode: "fork",
+      autorestart: true,
+    },
+    {
+      name: "Task Scheduler",
+      cwd: "./schedulers",
+      script: "pnpm",
+      args: "run task",
+      exec_mode: "fork",
+      autorestart: true,
+    },
+  ],
+};
