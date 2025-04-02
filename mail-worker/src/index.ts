@@ -1,5 +1,10 @@
 import { Message } from "@aws-sdk/client-sqs";
-import { EmailContentOptions, MailMethod, SMTPConfig } from "./types/mails.js";
+import {
+  EmailContentOptions,
+  MailMethod,
+  SESConfig,
+  SMTPConfig,
+} from "./types/mails.js";
 import { SQSInputType } from "./types/sqs.js";
 import { env } from "./utils/env.js";
 import { Logger } from "./utils/logger.js";
@@ -8,23 +13,21 @@ import { SQSConsumer } from "./utils/sqs.js";
 
 async function processMessage(message: Message, body: SQSInputType) {
   const email = {
-    replyToEmail: "test@test.com",
-    from: "test@test.com",
-    to: ["test@test.com"],
-    subject: "Test Subject",
-    body: "Test Body",
-    senderName: "Test Sender",
+    replyToEmail: body.email.replyToEmail,
+    from: body.email.from,
+    to: [body.email.to],
+    subject: body.email.subject,
+    body: body.email.body,
+    senderName: body.email.senderName,
   } satisfies EmailContentOptions;
 
-  const config = {
-    user: "test@test.com",
-    encryptedPass: "test",
-    port: 465,
-    host: "smtp.gmail.com",
-  } satisfies SMTPConfig;
+  const sqsConfig = {
+    region: env.SQS_REGION,
+    accessKeyId: env.AWS_KEY,
+    secretAccessKey: env.AWS_SECRET,
+  } satisfies SESConfig;
 
-  //   TODO: Implement the body
-  await sendMail({ email, method: MailMethod.SMTP, config });
+  await sendMail({ email, method: MailMethod.SES, config: sqsConfig });
 }
 
 async function main() {
@@ -44,4 +47,5 @@ async function main() {
 
   consumer.start();
 }
+
 main();

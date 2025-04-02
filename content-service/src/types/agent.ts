@@ -27,7 +27,6 @@ export enum Tone {
 
 export enum SenderIdentityType {
   SKYFUNNEL = "SKYFUNNEL",
-  // Add other types if they exist
 }
 
 // Use interfaces for entity models

@@ -42,30 +42,27 @@ async function pushAgentsToQueue() {
   }
 }
 
-pushAgentsToQueue();
+function startScheduler() {
+  cron.schedule(env.AGENT_SCHEDULER_CRON, async () => {
+    Logger.info("Running SQS Scheduler...");
+    await pushAgentsToQueue();
+  });
 
-// TODO: Uncomment this
-// function startScheduler() {
-//   cron.schedule(env.AGENT_SCHEDULER_CRON, async () => {
-//     Logger.info("Running SQS Scheduler...");
-//     await pushAgentsToQueue();
-//   });
+  Logger.info(
+    `Scheduler started: Running according to the ${env.AGENT_SCHEDULER_CRON} cron expression`
+  );
+}
 
-//   Logger.info(
-//     `Scheduler started: Running according to the ${env.AGENT_SCHEDULER_CRON} cron expression`
-//   );
-// }
+Logger.info(`Starting the App in ${env.NODE_ENV} mode...`);
+Logger.debug(`Debug mode is on`);
+startScheduler();
 
-// Logger.info(`Starting the App in ${env.NODE_ENV} mode...`);
-// Logger.debug(`Debug mode is on`);
-// startScheduler();
+process.on("SIGINT", async () => {
+  Logger.info("🛑 Shutting down scheduler...");
+  process.exit(0);
+});
 
-// process.on("SIGINT", async () => {
-//   Logger.info("🛑 Shutting down scheduler...");
-//   process.exit(0);
-// });
-
-// process.on("SIGTERM", async () => {
-//   Logger.info("🛑 Shutting down scheduler...");
-//   process.exit(0);
-// });
+process.on("SIGTERM", async () => {
+  Logger.info("🛑 Shutting down scheduler...");
+  process.exit(0);
+});

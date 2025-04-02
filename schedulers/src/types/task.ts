@@ -18,19 +18,6 @@ export type AgentTask = {
   senderName: string;
 };
 
-export interface SMTPConfig {
-  host: string;
-  port: number;
-  user: string;
-  encryptedPass: string;
-}
-
-export interface SESConfig {
-  region: string;
-  accessKeyId: string;
-  secretAccessKey: string;
-}
-
 export type SQSOutputType = {
   agentId: string;
   email: {

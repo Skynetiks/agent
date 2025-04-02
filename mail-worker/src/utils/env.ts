@@ -38,6 +38,11 @@ export const envSchema = z.object({
   AWS_KEY: z.string().min(1).describe("AWS Key"),
   AWS_SECRET: z.string().min(1).describe("AWS Secret"),
   CONCURRENCY: z.coerce.number().default(1).describe("Concurrency"),
+
+  REDIS_HOST: z.string().default("localhost").describe("Redis Host"),
+  REDIS_PORT: z.coerce.number().default(6379).describe("Redis Port"),
+  REDIS_PASSWORD: z.string().optional().describe("Redis Password"),
+  REDIS_DB: z.coerce.number().default(0).describe("Redis Database"),
 });
 
 // Parse and validate environment variables
