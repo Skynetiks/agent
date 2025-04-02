@@ -118,25 +118,27 @@ ${ctaRequirements}
           <closing>✅ End with a polite sign-off, including sender details</closing>
           <variable>You will not give any variable in the content if information is missing, just skip it.</variable>
           <rule>You will not put anything inside square brackets if information is missing, just skip it.</rule>
-          <return-type>You have to return the content as a string format without any extra information (JUST CONTENT) (no HTML tags)</return-type>
+          <return-type>You have to return the content as an html (just don't add too much html. keep it simple. use <a> for links) format without any extra information (JUST CONTENT in HTML format)</return-type>
       </requirements>
 
       <rules information="These are the rules that the AI will follow to generate the email content. It is important to follow these rules to ensure the email content is relevant, engaging, and meets the target's needs.">
               <rule>Response should only contain the email content without any extra information. It should be in a string format.</rule>
-              <rule>Response should be in a string format without any extra information (JUST CONTENT) (no HTML tags)</rule>
+              <rule>You have to return the content as an html (just don't add too much html. keep it simple. use <a> for links) format without any extra information (JUST CONTENT in HTML format)</rule>
               <rule>Response should not give any variable in the content if information is missing, just skip it.</rule>
               <rule>Response should not put anything inside square brackets if information is missing, just skip it.</rule>
       </rules>
 
       <outputFormat information="Everything inside square brackets is a placeholder and should be replaced with the appropriate content">
-              Dear [Contact Name or Title],
-              [Customized introduction referencing target company details in the specified tone]
-              [Personalized body text highlighting sender's value proposition in the specified tone]
-              [Clear call-to-action with next steps in the specified tone]
-              Best regards,
-                  [Sender Name (if available else skip it)]
-                  [Sender Company (if available else skip it)]
-                  [Contact Information (if available else skip it)]
+         <div>
+            <p>Dear [Contact Name or Title],</p>
+              <p>[Customized introduction referencing target company details in the specified tone]</p>
+              <p>[Personalized body text highlighting sender's value proposition in the specified tone]</p>
+              <p>[Clear call-to-action with next steps in the specified tone]</p>
+              <p>Best regards,</p>
+              <p>[Sender Name (if available else skip it)]</p>
+              <p>[Sender Company (if available else skip it)]</p>
+              <p>[Contact Information (if available else skip it)]</p>
+         </div>
       </outputFormat>
   </prompt>
   `;

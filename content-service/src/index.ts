@@ -74,12 +74,27 @@ const processMessage = async (message: Message, body: SQSInputType) => {
 };
 
 async function main() {
-  const consumer = new SQSConsumer<SQSInputType>(
-    env.CONTENT_GENERATOR_QUEUE_URL,
-    processMessage
-  );
+  //   const consumer = new SQSConsumer<SQSInputType>(
+  //     env.CONTENT_GENERATOR_QUEUE_URL,
+  //     processMessage
+  //   );
 
-  consumer.start();
+  //   consumer.start();
+
+  processMessage(
+    {},
+    {
+      agentId: "ckv8y1x9g0001abcd1234xyz",
+      companyDescription:
+        "Insight AI Solutions is a cutting-edge technology firm specializing in AI-driven analytics, predictive modeling, and automation. With a focus on transforming raw data into actionable insights, the company serves industries such as finance, healthcare, and e-commerce. Founded in 2015, Insight AI Solutions has become a leader in leveraging artificial intelligence to optimize decision-making processes.",
+      companyName: "Insight AI Solutions",
+      email: "hello@insightai.com",
+      companyWebsite: "https://www.insightai.com",
+      linkedinUrl: "https://www.linkedin.com/company/insight-ai-solutions",
+      otherContext:
+        "Recent posts: '5 Ways AI is Revolutionizing Finance', 'How Machine Learning Can Improve Customer Retention', 'The Future of AI in Healthcare'. The company frequently shares insights on emerging trends in artificial intelligence, data science, and automation, offering thought leadership on AI ethics, deep learning advancements, and the impact of AI on global industries.",
+    }
+  );
 }
 
 main();

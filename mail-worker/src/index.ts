@@ -1,10 +1,5 @@
 import { Message } from "@aws-sdk/client-sqs";
-import {
-  EmailContentOptions,
-  MailMethod,
-  SESConfig,
-  SMTPConfig,
-} from "./types/mails.js";
+import { EmailContentOptions, MailMethod, SESConfig } from "./types/mails.js";
 import { SQSInputType } from "./types/sqs.js";
 import { env } from "./utils/env.js";
 import { Logger } from "./utils/logger.js";
