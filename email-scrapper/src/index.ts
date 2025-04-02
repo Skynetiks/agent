@@ -15,15 +15,12 @@ const handleMessage = async (message: Message, body: SQSAgentData) => {
     body.keyword,
     "::"
   );
-
   console.log(keywordName, keywordSite);
-
   const emails = await scrapeGoogleEmails(
     keywordName,
     keywordSite,
     "gmail.com"
   );
-
   const validEmails = validateEmails(emails);
   await verificationPublisher.sendBatchMessages(
     validEmails.map((email) => ({

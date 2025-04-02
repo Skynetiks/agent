@@ -16,7 +16,6 @@ export async function validateEmail(email: string) {
     return isInTopDomain;
   }
 
-  return EmailStatus.VALID;
-  //   const apiResult = await validatorApi(trimEmail);
-  //   return apiResult;
+  const apiResult = await validatorApi(trimEmail);
+  return apiResult;
 }

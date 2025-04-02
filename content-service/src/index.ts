@@ -2,10 +2,10 @@ import { Message } from "@aws-sdk/client-sqs";
 import { generateMailContent } from "./utils/generator";
 import { CompanyInfo, SQSInputType } from "./types";
 import { NonRetriableError, SQSConsumer } from "./utils/sqs";
-import { env } from "./utils/env";
 import { cache__getAgentDetails } from "./utils/agent";
 import { StrategyOption } from "./prompts/options/statergy";
 import { createAgentTask } from "./queries/agent";
+import { env } from "./utils/env";
 
 const processMessage = async (message: Message, body: SQSInputType) => {
   const receiverCompanyInfo = {
@@ -25,11 +25,13 @@ const processMessage = async (message: Message, body: SQSInputType) => {
     valueProposition: undefined,
   } satisfies CompanyInfo<"receiver">;
 
-  const [agent] = await cache__getAgentDetails(body.agentId);
+  const agents = await cache__getAgentDetails(body.agentId);
 
-  if (!agent) {
+  if (!agents.length) {
     throw new NonRetriableError("Agent not found");
   }
+
+  const agent = agents[Math.floor(Math.random() * agents.length)];
 
   const senderCompanyInfo = {
     companyName: agent.organizationName,
@@ -72,25 +74,12 @@ const processMessage = async (message: Message, body: SQSInputType) => {
 };
 
 async function main() {
-  //   const consumer = new SQSConsumer<SQSInputType>(
-  //     env.CONTENT_GENERATOR_QUEUE_URL,
-  //     processMessage
-  //   );
-
-  //   consumer.start();
-
-  await processMessage(
-    {},
-    {
-      agentId: "58a203df-1e75-4baf-b66b-b1230bb0781b",
-      companyDescription: "Welcome to skynetiks we provide it services",
-      companyName: "Skynetiks",
-      companyWebsite: "https://www.google.com",
-      email: "saidiwanshu@gmail.com",
-      linkedinUrl: "",
-      otherContext: "",
-    }
+  const consumer = new SQSConsumer<SQSInputType>(
+    env.CONTENT_GENERATOR_QUEUE_URL,
+    processMessage
   );
+
+  consumer.start();
 }
 
 main();
