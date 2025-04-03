@@ -1,4 +1,5 @@
 import { Pool } from "pg";
+import dotenv from "dotenv";
 import { Logger } from "./logger";
 import { env } from "./env";
 
