@@ -29,12 +29,7 @@ export const envSchema = z.object({
   AWS_KEY: z.string().min(1).describe("AWS Key"),
   AWS_SECRET: z.string().min(1).describe("AWS Secret"),
 
-  PG_HOST: z.string().default("localhost").describe("Postgres Host"),
-  PG_PORT: z.coerce.number().default(5432).describe("Postgres Port"),
-  PG_USER: z.string().default("postgres").describe("Postgres User"),
-  PG_PASSWORD: z.string().default("password").describe("Postgres Password"),
-  PG_DATABASE: z.string().optional().describe("Postgres Database"),
-  PG_SSL: z.string().default("false").describe("Postgres SSL"),
+  DATABASE_URL: z.string().url().describe("Database URL"),
 
   REDIS_HOST: z.string().default("localhost").describe("Redis Host"),
   REDIS_PORT: z.coerce.number().default(6379).describe("Redis Port"),
