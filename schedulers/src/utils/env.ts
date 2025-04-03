@@ -30,12 +30,13 @@ export const envSchema = z.object({
     .string()
     .default("*/5 * * * *")
     .describe("Cron expression for mail sender"),
-  PG_HOST: z.string().default("localhost").describe("Postgres Host"),
-  PG_PORT: z.coerce.number().default(5432).describe("Postgres Port"),
-  PG_USER: z.string().default("postgres").describe("Postgres User"),
-  PG_PASSWORD: z.string().default("password").describe("Postgres Password"),
-  PG_DATABASE: z.string().optional().describe("Postgres Database"),
-  PG_SSL: z.string().default("false").describe("Postgres SSL"),
+  //   PG_HOST: z.string().default("localhost").describe("Postgres Host"),
+  //   PG_PORT: z.coerce.number().default(5432).describe("Postgres Port"),
+  //   PG_USER: z.string().default("postgres").describe("Postgres User"),
+  //   PG_PASSWORD: z.string().default("password").describe("Postgres Password"),
+  //   PG_DATABASE: z.string().optional().describe("Postgres Database"),
+  //   PG_SSL: z.string().default("false").describe("Postgres SSL"),
+  DATABASE_URL: z.string().describe("Postgres Database URL"),
 });
 
 // Parse and validate environment variables

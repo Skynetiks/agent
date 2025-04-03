@@ -1,20 +1,13 @@
 import { Pool } from "pg";
-import dotenv from "dotenv";
 import { Logger } from "./logger";
 import { env } from "./env";
 
 dotenv.config();
 
 const pool = new Pool({
-  host: env.PG_HOST,
-  port: env.PG_PORT,
-  user: env.PG_USER,
-  password: env.PG_PASSWORD,
-  database: env.PG_DATABASE,
-  max: 10,
-  idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 2000,
-  ssl: env.PG_SSL === "true",
+  connectionString: env.DATABASE_URL,
+  idleTimeoutMillis: 30000, // 30 seconds
+  max: 100, // Maximum concurrent connections
 });
 
 export const query = async <T extends Object>(
