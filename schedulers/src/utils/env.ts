@@ -37,6 +37,10 @@ export const envSchema = z.object({
   //   PG_DATABASE: z.string().optional().describe("Postgres Database"),
   //   PG_SSL: z.string().default("false").describe("Postgres SSL"),
   DATABASE_URL: z.string().describe("Postgres Database URL"),
+  REDIS_HOST: z.string().default("localhost").describe("Redis Host"),
+  REDIS_PORT: z.coerce.number().default(6379).describe("Redis Port"),
+  REDIS_PASSWORD: z.string().optional().describe("Redis Password"),
+  REDIS_DB: z.coerce.number().default(0).describe("Redis Database"),
 });
 
 // Parse and validate environment variables

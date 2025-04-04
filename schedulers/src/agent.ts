@@ -4,6 +4,7 @@ import { SQSAgentData, SQSRegion } from "./types";
 import { env } from "./utils/env";
 import { Logger } from "./utils/logger";
 import { decreaseLastKeywordIndex, getActiveAgents } from "./queries/agent";
+import { initializeRateLimiter } from "./queries/task";
 
 // Initialize SQS service
 const leadGeneratorQueue = new SQSService<SQSAgentData>({
@@ -30,6 +31,8 @@ async function pushAgentsToQueue() {
         .map((a) => a.name)
         .join(",")}]`
     );
+
+    await Promise.all(agents.map(initializeRateLimiter));
 
     await leadGeneratorQueue.sendBatchMessages(agents, 10);
 

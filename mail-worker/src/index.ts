@@ -5,24 +5,34 @@ import { env } from "./utils/env.js";
 import { Logger } from "./utils/logger.js";
 import { sendMail } from "./utils/mail.js";
 import { SQSConsumer } from "./utils/sqs.js";
+import { redis } from "./utils/redis.js";
 
 async function processMessage(message: Message, body: SQSInputType) {
-  const email = {
-    replyToEmail: body.email.replyToEmail,
-    from: body.email.from,
-    to: [body.email.to],
-    subject: body.email.subject,
-    body: body.email.body,
-    senderName: body.email.senderName,
-  } satisfies EmailContentOptions;
+  try {
+    const email = {
+      replyToEmail: body.email.replyToEmail,
+      from: body.email.from,
+      to: [body.email.to],
+      subject: body.email.subject,
+      body: body.email.body,
+      senderName: body.email.senderName,
+    } satisfies EmailContentOptions;
 
-  const sqsConfig = {
-    region: env.SQS_REGION,
-    accessKeyId: env.AWS_KEY,
-    secretAccessKey: env.AWS_SECRET,
-  } satisfies SESConfig;
+    const sqsConfig = {
+      region: env.SQS_REGION,
+      accessKeyId: env.AWS_KEY,
+      secretAccessKey: env.AWS_SECRET,
+    } satisfies SESConfig;
 
-  await sendMail({ email, method: MailMethod.SES, config: sqsConfig });
+    await sendMail({ email, method: MailMethod.SES, config: sqsConfig });
+  } catch (error) {
+    Logger.error("Failed to send email", {
+      error,
+      messageId: message.MessageId,
+      body: JSON.stringify(body),
+    });
+    throw error;
+  }
 }
 
 async function main() {
