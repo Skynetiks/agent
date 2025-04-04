@@ -58,7 +58,7 @@ export const isRateLimited = async (agentId: string): Promise<boolean> => {
       return true;
     }
 
-    await redis.incr(`${agentId}:currentCount`);
+    await redis.increment(`${agentId}:currentCount`);
     return false;
   } catch (error) {
     Logger.error(`Rate limit check failed for agent ${agentId}: ${error}`);

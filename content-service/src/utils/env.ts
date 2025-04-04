@@ -31,10 +31,7 @@ export const envSchema = z.object({
 
   DATABASE_URL: z.string().url().describe("Database URL"),
 
-  REDIS_HOST: z.string().default("localhost").describe("Redis Host"),
-  REDIS_PORT: z.coerce.number().default(6379).describe("Redis Port"),
-  REDIS_PASSWORD: z.string().optional().describe("Redis Password"),
-  REDIS_DB: z.coerce.number().default(0).describe("Redis Database"),
+  REDIS_URL: z.string().describe("Redis URL"),
 });
 
 // Parse and validate environment variables

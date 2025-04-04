@@ -1,12 +1,10 @@
 import { createClient } from "redis";
 import { env } from "./env";
+import { Logger } from "./logger";
 
 // Redis configuration interface
 interface RedisConfig {
-  host: string;
-  port: number;
-  password?: string;
-  db?: number;
+  url: string;
 }
 
 class RedisService {
@@ -16,18 +14,12 @@ class RedisService {
 
   private constructor(config: RedisConfig) {
     this.client = createClient({
-      socket: {
-        host: config.host,
-        port: config.port,
-      },
-      password: config.password,
-      database: config.db || 0,
+      url: config.url,
     });
 
     this.setupEventListeners();
   }
 
-  // Singleton pattern for Redis connection
   public static getInstance(config: RedisConfig): RedisService {
     if (!RedisService.instance) {
       RedisService.instance = new RedisService(config);
@@ -35,7 +27,6 @@ class RedisService {
     return RedisService.instance;
   }
 
-  // Setup event listeners for connection management
   private setupEventListeners(): void {
     this.client.on("error", (err) => {
       console.error("Redis Client Error", err);
@@ -52,7 +43,6 @@ class RedisService {
     });
   }
 
-  // Establish connection
   public async connect(): Promise<void> {
     if (!this.isConnected) {
       try {
@@ -64,7 +54,6 @@ class RedisService {
     }
   }
 
-  // Disconnect from Redis
   public async disconnect(): Promise<void> {
     if (this.isConnected) {
       await this.client.quit();
@@ -72,7 +61,6 @@ class RedisService {
     }
   }
 
-  // Set value with optional expiration
   public async set(
     key: string,
     value: string,
@@ -92,7 +80,6 @@ class RedisService {
     }
   }
 
-  // Get value
   public async get(key: string): Promise<string | null> {
     try {
       return await this.client.get(key);
@@ -102,7 +89,6 @@ class RedisService {
     }
   }
 
-  // Delete value
   public async delete(key: string): Promise<number> {
     try {
       return await this.client.del(key);
@@ -112,7 +98,6 @@ class RedisService {
     }
   }
 
-  // Batch operations
   public async mset(keyValuePairs: Record<string, string>): Promise<void> {
     try {
       await this.client.mSet(keyValuePairs);
@@ -122,30 +107,28 @@ class RedisService {
     }
   }
 
-  public async mget(...keys: string[]): Promise<(string | null)[]> {
+  public async increment(key: string): Promise<number> {
     try {
-      return await this.client.mGet(keys);
+      return await this.client.incr(key);
     } catch (error) {
-      console.error("Redis mget error", error);
+      console.error("Redis increment error", error);
       throw error;
     }
   }
 
-  public async incr(key: string): Promise<number> {
+  public async mget(...keys: string[]): Promise<Array<string | null>> {
     try {
-      return await this.client.incr(key);
+      return await this.client.mGet(keys);
     } catch (error) {
-      console.error("Redis incr error", error);
+      Logger.error(`Redis mget error: ${error}`);
       throw error;
     }
   }
 }
 
+// Example env.REDIS_URL: "redis://:password@localhost:6379/0"
 const redisConfig: RedisConfig = {
-  host: env.REDIS_HOST || "localhost",
-  port: env.REDIS_PORT,
-  password: env.REDIS_PASSWORD,
-  db: env.REDIS_DB,
+  url: env.REDIS_URL,
 };
 
 export const redis = RedisService.getInstance(redisConfig);

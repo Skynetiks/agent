@@ -48,5 +48,13 @@ module.exports = {
       exec_mode: "fork",
       autorestart: true,
     },
+    {
+      name: "Web Scrapper",
+      cwd: "./web-scrapper",
+      script: "npm",
+      args: "run dev",
+      exec_mode: "fork",
+      autorestart: true,
+    },
   ],
 };
