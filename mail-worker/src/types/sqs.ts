@@ -1,5 +1,6 @@
 export type SQSInputType = {
   agentId: string;
+  taskId: string;
   email: {
     to: string;
     subject: string;

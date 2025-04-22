@@ -68,4 +68,5 @@ export type SQSAgentData = {
   createdAt: string;
   updatedAt: string;
   lastKeywordIndex: number;
+  agentMailUsedCount: number;
 };

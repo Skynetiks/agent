@@ -4,6 +4,7 @@ import { scrapeGoogleEmails } from "./utils/extractor";
 import { SQSConsumer, SQSPublisher } from "./utils/sqs";
 import { Lead, SQSAgentData } from "./types";
 import { Email } from "./types/emails";
+import { DBLogger } from "../queries/log";
 
 const verificationPublisher = new SQSPublisher<Lead>({
   queueUrl: env.LEAD_VERIFICATION_QUEUE_URL,
@@ -22,6 +23,10 @@ const handleMessage = async (message: Message, body: SQSAgentData) => {
     "gmail.com"
   );
   const validEmails = validateEmails(emails);
+  await new DBLogger(body.id).log(
+    "Emails scraped",
+    `Found ${validEmails.length} emails related to ${keywordName}`
+  );
   await verificationPublisher.sendBatchMessages(
     validEmails.map((email) => ({
       email: email.email,

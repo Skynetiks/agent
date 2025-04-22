@@ -20,6 +20,7 @@ export type AgentTask = {
 
 export type SQSOutputType = {
   agentId: string;
+  taskId: string;
   email: {
     from: string;
     to: string;

@@ -6,6 +6,7 @@ import { cache__getAgentDetails } from "./utils/agent";
 import { StrategyOption } from "./prompts/options/statergy";
 import { createAgentTask } from "./queries/agent";
 import { env } from "./utils/env";
+import { DBLogger } from "./queries/log";
 
 const processMessage = async (message: Message, body: SQSInputType) => {
   const receiverCompanyInfo = {
@@ -71,6 +72,11 @@ const processMessage = async (message: Message, body: SQSInputType) => {
     replyTo: agent.senderEmail,
     senderName: agent.senderName,
   });
+
+  await new DBLogger(agent.id).log(
+    "Email Prepared",
+    `An email has been prepared with subject: ${content.subject}`
+  );
 };
 
 async function main() {

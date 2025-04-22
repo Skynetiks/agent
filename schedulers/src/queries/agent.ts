@@ -23,30 +23,35 @@ import { Logger } from "../utils/logger";
  */
 export const ActiveAgentsQuery = `
 WITH next_keyword AS (
-  SELECT
-      a.id,
-      a.name,
-      a.description,
-      a.keywords[a."lastKeywordIndex" + 1] AS keyword,
-      a."activeTill",
-      a.timezone,
-      a."sendLimitDay",
-      a.objective,
-      a."valueProposition",
-      a."personalizationLevel",
-      a.length,
-      a.strategy,
-      a.tone,
-      a."createdAt",
-      a."updatedAt",
-      a."lastKeywordIndex"
-  FROM "Agent" a
-  WHERE
-      a."activeTill" IS NOT NULL
-      AND a."activeTill" >= NOW()
-      AND a."lastKeywordIndex" < array_length(a.keywords, 1)
-  ORDER BY a."updatedAt" ASC
-  LIMIT 10
+SELECT
+    a.id,
+    a.name,
+    a.description,
+    a.keywords[a."lastKeywordIndex" + 1] AS keyword,
+    a."activeTill",
+    a.timezone,
+    a."sendLimitDay",
+    a.objective,
+    a."valueProposition",
+    a."personalizationLevel",
+    a.length,
+    a.strategy,
+    a.tone,
+    a."createdAt",
+    a."updatedAt",
+    a."lastKeywordIndex",
+    org."agentMailUsedCount",
+    sub."allowedAgentMails"
+FROM "Agent" a
+LEFT JOIN "Organization" org ON a."organizationId" = org.id
+LEFT JOIN "OrgSubscription" sub ON org."orgSubscriptionId" = sub.id
+WHERE
+    a."activeTill" IS NOT NULL
+    AND a."activeTill" >= NOW()
+    AND a."lastKeywordIndex" < array_length(a.keywords, 1)
+    AND org."agentMailUsedCount" < COALESCE(sub."allowedAgentMails", 0)
+ORDER BY a."updatedAt" ASC
+LIMIT 10
 )
 UPDATE "Agent" AS a
 SET "lastKeywordIndex" = nk."lastKeywordIndex" + 1

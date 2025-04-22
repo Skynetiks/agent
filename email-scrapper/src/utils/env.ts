@@ -29,6 +29,7 @@ export const envSchema = z.object({
     .number()
     .min(1)
     .describe("Concurrency limit for SQS consumer"),
+  DATABASE_URL: z.string().url().min(1).describe("Database URL"),
 });
 
 // Parse and validate environment variables

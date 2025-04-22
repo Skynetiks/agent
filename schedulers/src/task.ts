@@ -15,6 +15,7 @@ async function pushLeadsToQueue() {
 
   const jobs = agentTasks.map((task) => ({
     agentId: task.agentId,
+    taskId: task.id,
     email: {
       from: task.from,
       to: task.to,

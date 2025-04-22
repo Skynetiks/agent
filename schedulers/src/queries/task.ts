@@ -4,22 +4,34 @@ import { query } from "../utils/db";
 import { Logger } from "../utils/logger";
 import { redis } from "../utils/redis";
 
+// FIX: Currently this can cause overflow in case if some process are still processing
 const fetchTasksQuery = `
-WITH updated_rows AS (
-    UPDATE "public"."AgentTask" AS a
-    SET "lastCheckedAt" = NOW()
+WITH locked_tasks AS (
+    SELECT at.*
+    FROM "AgentTask" at
+    INNER JOIN "Agent" a ON at."agentId" = a.id
+    INNER JOIN "Organization" org ON a."organizationId" = org.id
+    INNER JOIN "OrgSubscription" sub ON org."orgSubscriptionId" = sub.id
     WHERE
-        a."status" = 'PENDING'
-        AND CURRENT_TIME >= a."startTime"::TIME
-        AND CURRENT_TIME <= a."endTime"::TIME
-        AND TRIM(to_char(NOW(), 'FMDay')) = ANY("ActiveDays")
+        at."status" = 'PENDING'
+        AND CURRENT_TIME >= at."startTime"::TIME
+        AND CURRENT_TIME <= at."endTime"::TIME
+        AND TRIM(to_char(NOW(), 'FMDay')) = ANY(at."ActiveDays")
         AND (
-            a."lastCheckedAt" IS NULL
-            OR a."lastCheckedAt" <= NOW() - INTERVAL '1 hour'
+            at."lastCheckedAt" IS NULL
+            OR at."lastCheckedAt" <= NOW() - INTERVAL '1 hour'
         )
-    ORDER BY a."createdAt" ASC
+        AND org."agentMailUsedCount" < sub."allowedAgentMails"
+    ORDER BY at."createdAt" ASC
     LIMIT 10
-    RETURNING a.*
+    FOR UPDATE SKIP LOCKED
+),
+updated_rows AS (
+    UPDATE "AgentTask" at
+    SET "lastCheckedAt" = NOW()
+    FROM locked_tasks lt
+    WHERE at.id = lt.id
+    RETURNING at.*
 )
 SELECT * FROM updated_rows;
 `;
